@@ -1,39 +1,37 @@
-name: Deploy to GitHub Pages
-
+name: wf-develop-deploy
 on:
   push:
-    branches: [ develop ]
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
+    branches: 
+      - develop
 
 jobs:
-  build:
+  build_job:
     runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up Node
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-    - run: npm install
-    - run: npm install -g parcel
-    - run: parcel build src/index.html --dist-dir dist
-    - uses: actions/upload-pages-artifact@v3
-      with:
-        path: 'dist'
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-    - uses: actions/deploy-pages@v4
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: build using parcel
+        run: |
+          npx parcel build "./src/index.html" --dist-dir "./dist" --public-url "./"
+
+      - name: saving artifacts on cloud
+        uses: actions/upload-pages-artifact@v3
+        with: 
+          path: "./dist"
+          name: "develop-artifact"
+
+  wf-develop-deploy:
+    needs: build_job     
+    permissions:
+      pages: write
+      id-token: write
+    environment: "development-env"
+    runs-on: ubuntu-latest
+    steps:
+      - name: deply build artifacts on github pages
+        uses: actions/deploy-pages@v4
+        with: 
+         artifact_name: "develop-artifact"
+         token: ${{github.token}}
