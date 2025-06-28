@@ -1,0 +1,32 @@
+nav {
+    background: #2c3e50;
+    padding: 15px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+body {
+    font-family: Arial;
+    margin: 0;
+    padding: 20px;
+}
+
+form {
+    margin-top: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 10px;
+}
+
+button {
+    background: #2c3e50;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+}
